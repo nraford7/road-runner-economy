@@ -555,23 +555,252 @@
             margin-top: 2rem;
         }
 
-        /* Responsive */
+        /* Responsive - Mobile */
         @media (max-width: 768px) {
-            .section {
-                padding: 2rem 1.5rem;
-                margin: 3rem 1rem;
+            body {
+                font-size: 16px;
+                line-height: 1.7;
             }
 
+            /* Tighter content padding */
+            .content {
+                padding: 0 1rem;
+            }
+
+            /* Section cards - tighter and more compact */
+            .section {
+                padding: 1.5rem 1.25rem;
+                margin: 2rem 0.5rem;
+                border-radius: 6px;
+            }
+
+            .section::before {
+                width: 40px;
+                height: 28px;
+                top: -14px;
+            }
+
+            /* Headings */
+            h2 {
+                font-size: 1.6rem;
+                margin-bottom: 1rem;
+            }
+
+            /* Paragraphs - tighter spacing */
+            p {
+                margin-bottom: 1rem;
+            }
+
+            /* Hero adjustments */
+            .hero {
+                padding: 1.5rem 1rem;
+                min-height: 90vh;
+            }
+
+            .hero .author {
+                font-size: 0.95rem;
+            }
+
+            .scroll-hint {
+                font-size: 1.2rem;
+                bottom: 1.5rem;
+            }
+
+            /* Pullquotes - more compact */
             .pullquote {
+                font-size: 1.3rem;
+                padding: 1.25rem 0.75rem;
+                margin: 1.5rem 0;
+            }
+
+            .pullquote::before,
+            .pullquote::after {
+                font-size: 1.3rem;
+                margin: 0 0.5rem;
+            }
+
+            /* Meme breaks - smaller images */
+            .meme-break {
+                font-size: 3rem;
+                padding: 1.5rem 0.5rem;
+            }
+
+            .meme-break img {
+                max-width: 90% !important;
+                width: auto !important;
+            }
+
+            .meme-break .caption {
+                font-size: 1.1rem;
+            }
+
+            /* Tombstone section */
+            .tombstone-section {
+                padding: 2.5rem 1rem;
+            }
+
+            .tombstone-section::before {
                 font-size: 1.5rem;
             }
 
+            .tombstone-img {
+                width: 95%;
+                border-radius: 8px;
+            }
+
+            .tombstone-caption {
+                font-size: 0.95rem;
+                padding: 0 0.5rem;
+            }
+
+            /* Tech quotes */
+            .tech-quote {
+                padding: 1rem 1.25rem;
+                font-size: 0.9rem;
+                margin: 1.5rem 0;
+            }
+
+            /* ACME boxes */
+            .acme-box {
+                padding: 1.5rem 1.25rem;
+                margin: 1.5rem 0;
+            }
+
+            .acme-box::before {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.75rem;
+                top: -8px;
+                right: 10px;
+            }
+
+            .acme-box h3 {
+                font-size: 1.25rem;
+            }
+
+            /* Effects list */
+            .effects-list li {
+                padding: 0.75rem 0 0.75rem 2.5rem;
+            }
+
+            .effects-list li::before {
+                font-size: 1.2rem;
+            }
+
+            .effects-list strong {
+                font-size: 1.05rem;
+            }
+
+            /* Cliff section */
+            .cliff-section {
+                min-height: 200px;
+            }
+
             .cliff-section .cliff-text {
+                font-size: 1.75rem;
+            }
+
+            .cliff-section .falling-emoji {
+                font-size: 2.5rem;
+            }
+
+            /* Side-by-side GIF + quote layouts - stack on mobile */
+            div[style*="display: flex"][style*="align-items: center"] {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                padding: 1.5rem 0.5rem !important;
+            }
+
+            div[style*="display: flex"] > img {
+                max-width: 85% !important;
+            }
+
+            div[style*="display: flex"] > .pullquote {
+                min-width: auto !important;
+                width: 100% !important;
+            }
+
+            /* Footer */
+            .footer {
+                padding: 2.5rem 1rem;
+            }
+
+            .footer .beep-final {
+                font-size: 3rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .footer p {
+                font-size: 0.85rem;
+            }
+
+            .footer p[style*="max-width: 600px"] {
+                padding: 0 0.5rem;
+            }
+
+            /* Road */
+            .road {
+                height: 15px;
+                margin-top: 1.5rem;
+            }
+
+            /* Project list in Perfect Storm section */
+            ul[style*="list-style-type: disc"] {
+                padding-left: 1.25rem !important;
+                margin: 1rem 0 !important;
+            }
+
+            ul[style*="list-style-type: disc"] li {
+                margin-bottom: 0.6rem !important;
+                font-size: 0.95rem;
+            }
+
+            /* Beep beep popup - smaller on mobile */
+            .beep-beep {
+                font-size: 2.5rem;
+            }
+
+            /* Road runner animation - smaller */
+            .road-runner {
                 font-size: 2rem;
             }
 
-            .meme-break {
-                font-size: 4rem;
+            /* Falling coyote - smaller */
+            .falling-coyote {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 380px) {
+            body {
+                font-size: 15px;
+            }
+
+            .section {
+                padding: 1.25rem 1rem;
+                margin: 1.5rem 0.25rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .pullquote {
+                font-size: 1.15rem;
+                padding: 1rem 0.5rem;
+            }
+
+            .pullquote::before,
+            .pullquote::after {
+                display: none;
+            }
+
+            .footer .beep-final {
+                font-size: 2.5rem;
+            }
+
+            .hero h1 {
+                letter-spacing: 0.02em;
             }
         }
 
