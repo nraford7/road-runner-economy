@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make It So Camp — Become a Captain of AI</title>
+    <meta name="description" content="A two-week distributed co-working camp teaching knowledge workers to direct AI tools with precision. Learn articulation, not programming.">
+    <meta property="og:title" content="Make It So Camp">
+    <meta property="og:description" content="How to Become a Captain of AI (instead of being driven by it)">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --void-black: #0a0a0f;
+            --bridge-dark: #12121a;
+            --console-grey: #1a1a24;
+            --hull-grey: #2a2a38;
+            --amber-glow: #f4a261;
+            --amber-dim: #c4824a;
+            --blue-alert: #4ecdc4;
+            --red-alert: #e63946;
+            --cream-text: #f1f1e6;
+            --dim-text: #9999a8;
+            --success-green: #06d6a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--void-black);
+            color: var(--cream-text);
+            line-height: 1.75;
+            font-size: 19px;
+        }
+
+        /* Scan line overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, var(--void-black) 0%, transparent 100%);
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--amber-glow);
+        }
+
+        .nav-cta {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            padding: 0.6rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--amber-glow);
+            color: var(--amber-glow);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            background: var(--amber-glow);
+            color: var(--void-black);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 3rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(244, 162, 97, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(78, 205, 196, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--amber-glow);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hero-tag::before {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--amber-glow);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        h1 strong {
+            font-weight: 700;
+            color: var(--amber-glow);
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--dim-text);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 3rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--dim-text);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scroll-indicator::after {
+            content: '';
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(180deg, var(--amber-glow) 0%, transparent 100%);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.1); }
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 3rem;
+            position: relative;
+        }
+
+        .section-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-wide {
+            max-width: 1100px;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            color: var(--cream-text);
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin: 2.5rem 0 1rem;
+            color: var(--amber-glow);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* The Opening Story */
+        .story-section {
+            background: var(--bridge-dark);
+            border-left: 3px solid var(--hull-grey);
+        }
+
+        .story-section .section-inner {
+            padding-left: 2rem;
+        }
+
+        .opening-story {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--dim-text);
+            border-left: 2px solid var(--amber-dim);
+            padding-left: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Comparison boxes */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .compare-box {
+            padding: 2rem;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .compare-box.vague {
+            background: rgba(230, 57, 70, 0.1);
+            border: 1px solid rgba(230, 57, 70, 0.3);
+        }
+
+        .compare-box.articulated {
+            background: rgba(6, 214, 160, 0.1);
+            border: 1px solid rgba(6, 214, 160, 0.3);
+        }
+
+        .compare-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .compare-box.vague .compare-label {
+            color: var(--red-alert);
+        }
+
+        .compare-box.articulated .compare-label {
+            color: var(--success-green);
+        }
+
+        .compare-box blockquote {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .compare-result {
+            font-size: 0.9rem;
+            color: var(--dim-text);
+            font-style: italic;
+        }
+
+        /* Pullquote */
+        .pullquote {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--amber-glow);
+            text-align: center;
+            padding: 4rem 2rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .pullquote::before,
+        .pullquote::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: var(--hull-grey);
+        }
+
+        .pullquote::before { top: 0; }
+        .pullquote::after { bottom: 0; }
+
+        /* Captain Metaphor */
+        .captain-section {
+            background: linear-gradient(180deg, var(--void-black) 0%, var(--bridge-dark) 50%, var(--void-black) 100%);
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .role-card {
+            background: var(--console-grey);
+            padding: 2rem;
+            border-radius: 4px;
+            border-top: 2px solid var(--amber-glow);
+        }
+
+        .role-card h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--cream-text);
+        }
+
+        .role-card p {
+            font-size: 0.95rem;
+            color: var(--dim-text);
+            margin: 0;
+        }
+
+        /* Curriculum */
+        .curriculum-section {
+            background: var(--bridge-dark);
+        }
+
+        .curriculum-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .curriculum-item {
+            background: var(--console-grey);
+            padding: 1.75rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--hull-grey);
+            transition: all 0.3s ease;
+        }
+
+        .curriculum-item:hover {
+            border-left-color: var(--amber-glow);
+            transform: translateX(4px);
+        }
+
+        .curriculum-item h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--cream-text);
+        }
+
+        .curriculum-item p {
+            font-size: 0.9rem;
+            color: var(--dim-text);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Structure */
+        .structure-section {
+            background: var(--void-black);
+        }
+
+        .structure-timeline {
+            display: flex;
+            gap: 2rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .structure-timeline::before {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--hull-grey);
+        }
+
+        .timeline-item {
+            flex: 1;
+            position: relative;
+            padding-top: 3rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--amber-glow);
+            border-radius: 50%;
+            transform: translateY(12px);
+        }
+
+        .timeline-item h4 {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--amber-glow);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item p {
+            font-size: 0.95rem;
+            color: var(--dim-text);
+            margin: 0;
+        }
+
+        /* CTA / Signup */
+        .cta-section {
+            background: linear-gradient(180deg, var(--bridge-dark) 0%, var(--void-black) 100%);
+            text-align: center;
+            padding: 8rem 3rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section .subtitle {
+            color: var(--dim-text);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .urgency-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--amber-glow);
+            margin-bottom: 2rem;
+        }
+
+        .urgency-text span {
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        /* Signup Form */
+        .signup-form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--console-grey);
+            padding: 3rem;
+            border-radius: 4px;
+            border: 1px solid var(--hull-grey);
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--dim-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bridge-dark);
+            border: 1px solid var(--hull-grey);
+            border-radius: 4px;
+            color: var(--cream-text);
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--amber-glow);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: var(--amber-glow);
+            border: none;
+            border-radius: 4px;
+            color: var(--void-black);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--amber-dim);
+            transform: translateY(-2px);
+        }
+
+        .form-note {
+            font-size: 0.85rem;
+            color: var(--dim-text);
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 3rem;
+            text-align: center;
+            border-top: 1px solid var(--hull-grey);
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: var(--dim-text);
+        }
+
+        footer a {
+            color: var(--amber-glow);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .curriculum-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .structure-timeline {
+                flex-direction: column;
+            }
+
+            .structure-timeline::before {
+                top: 0;
+                bottom: 0;
+                left: 9px;
+                width: 2px;
+                height: auto;
+            }
+
+            .timeline-item {
+                padding-top: 0;
+                padding-left: 3rem;
+            }
+
+            .timeline-marker {
+                top: 0;
+                transform: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                font-size: 17px;
+            }
+
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .hero {
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .pullquote {
+                font-size: 1.4rem;
+                padding: 3rem 1rem;
+            }
+
+            .signup-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .scroll-indicator {
+                display: none;
+            }
+
+            .hero-subtitle {
+                font-size: 1.15rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Make It So</div>
+        <a href="#signup" class="nav-cta">Join the Camp</a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">Two-Week Intensive</div>
+            <h1><strong>Make It So</strong> Camp</h1>
+            <p class="hero-subtitle">How to Become a Captain of AI (instead of being driven by it)</p>
+        </div>
+        <div class="scroll-indicator">Scroll</div>
+    </header>
+
+    <section class="story-section">
+        <div class="section-inner">
+            <p class="opening-story">A strategist opens Claude Code at 9am, hoping today is the day it finally clicks. She's read the tutorials. Watched the demos. She knows this tool could transform her work. But every session ends the same way: promising starts that drift into confusion.</p>
+
+            <p>Not because she lacks the brains—because she can't figure out how to get what she wants out of her head and into the machine in a way which gets what she wants.</p>
+
+            <p>She's not alone. Across industries, knowledge workers are experimenting in isolation. Researchers, analysts, project managers, operations leads—each running private experiments with AI tools. Some are succeeding quietly. Most are struggling silently.</p>
+
+            <p>There is no shared vocabulary. No pattern library. No moment where anyone says "here's what I'm learning" in a way which makes sense to people who aren't coding. The tools are spreading faster than the knowledge of how to use them.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-inner">
+            <h2>The Strange Truth</h2>
+            <p>Here's what's strange: the people who succeed aren't the most technical.</p>
+
+            <p>When Anthropic released Claude Code, developers used it for coding—then quickly began directing it to do everything else. The shift wasn't about programming skills. It was about something harder to name.</p>
+
+            <p>Developers became "directors" because they already had the habit of specifying their intent. Years of writing code trained them to articulate goals, constraints, and success criteria with brutal precision. Not because code requires technical knowledge—but because code requires clarity. The machine doesn't guess. You have to say exactly what you mean.</p>
+
+            <h3>The Gap</h3>
+            <p>The gap isn't technical documentation or tutorials—those exist in abundance. YouTube overflows with "how to use AI" videos. Every tool has a getting-started guide. The knowledge workers who struggle aren't missing information. They're missing something else.</p>
+
+            <p>The gap is about <em>articulation</em>: your ability to specify exactly what you actually want done. Not the technical syntax. The underlying skill of making implicit methods explicit. This means defining success criteria, naming constraints, directing the drafts, giving targeted feedback, and evaluating the results.</p>
+
+            <p>It's about translating years of tacit expertise into something precise enough that both humans and machines can understand, execute on, and evaluate.</p>
+        </div>
+    </section>
+
+    <div class="pullquote">
+        You cannot delegate to a machine what you cannot articulate.<br>
+        <span style="font-size: 1rem; color: var(--dim-text); margin-top: 1rem; display: block;">This is your bottleneck.</span>
+    </div>
+
+    <section>
+        <div class="section-inner">
+            <h2>Articulation is Your Superpower</h2>
+            <p style="font-style: italic; color: var(--dim-text);">Or: "Why I'm Glad I Got a Liberal Arts Degree After All"</p>
+
+            <p>The limiting factor isn't processing power, not which model you're using, not which language you speak. The limiting factor is your ability to say—precisely—what you want, why you want it, how close the output is to it, and how you'll know when it's done.</p>
+
+            <p>Here's what articulation looks like in practice:</p>
+
+            <div class="comparison">
+                <div class="compare-box vague">
+                    <div class="compare-label">Vague</div>
+                    <blockquote>"Help me analyze our customer data and find insights."</blockquote>
+                    <p class="compare-result">Result: Generic observations. Obvious patterns. Nothing actionable.</p>
+                </div>
+                <div class="compare-box articulated">
+                    <div class="compare-label">Articulated</div>
+                    <blockquote>"Identify customers who purchased twice in Q1 but not Q2. Segment by acquisition channel. Flag any segment with 40%+ drop-off. Output as a ranked list with a hypothesis for why each segment is dropping."</blockquote>
+                    <p class="compare-result">Result: Three segments flagged. One hypothesis led to a $50K campaign fix.</p>
+                </div>
+            </div>
+
+            <p>Most knowledge workers have never been trained like this. We've never had to make our methods explicit, or our goals so clear, until now. Our expertise lives in our intuition, pattern recognition, judgment calls and inarticulate feelings—often made in milliseconds.</p>
+
+            <p>That's fine when you're working alone. But when you delegate to an AI, you need words for what you know.</p>
+        </div>
+    </section>
+
+    <section class="captain-section">
+        <div class="section-inner section-wide">
+            <h2>From User to Captain</h2>
+            <p>You're not becoming a coder. You're becoming a captain—a director of activity, a shaper of intent, an evaluator of outcomes.</p>
+
+            <div class="role-grid">
+                <div class="role-card">
+                    <h4>Captains don't row boats.</h4>
+                    <p>They set direction, read conditions, make calls.</p>
+                </div>
+                <div class="role-card">
+                    <h4>Film directors don't operate cameras.</h4>
+                    <p>They shape vision, guide performance, ensure coherence.</p>
+                </div>
+                <div class="role-card">
+                    <h4>Showrunners don't write every line.</h4>
+                    <p>They maintain voice, give notes, hold the standard.</p>
+                </div>
+            </div>
+
+            <p>That's your job now. That is all of our jobs. This is the differentiator: from technical ability to creative direction.</p>
+
+            <p>When technical ability becomes less important (because AI is doing the work), articulation becomes essential. What matters most is creative vision. Precise feedback. Clear success criteria. The ability to specify goals and constraints so exactly that execution becomes straightforward—whether the executor is human or machine.</p>
+        </div>
+    </section>
+
+    <section class="curriculum-section">
+        <div class="section-inner section-wide">
+            <h2>The Curriculum</h2>
+            <p>One week per topic. Each builds on the last. All culminate in working artifacts you'll actually use.</p>
+
+            <div class="curriculum-grid">
+                <div class="curriculum-item">
+                    <h4>Tool Building 101</h4>
+                    <p>Scripts, apps, and utilities for your actual work. From micro-projects to deployed applications.</p>
+                </div>
+                <div class="curriculum-item">
+                    <h4>Strategic Thinking Infrastructure</h4>
+                    <p>Using AI as a structured thought partner. Scenario planning, decision analysis, assumption testing.</p>
+                </div>
+                <div class="curriculum-item">
+                    <h4>Research & Analysis</h4>
+                    <p>Systematic information gathering. Competitive analysis, market research, literature reviews, data visualization.</p>
+                </div>
+                <div class="curriculum-item">
+                    <h4>Creativity & Remixing</h4>
+                    <p>Input of visual, audio, thematic content. Synthesizing new concepts. Structured ideation.</p>
+                </div>
+                <div class="curriculum-item">
+                    <h4>Content Production</h4>
+                    <p>Proposal automation. Report generation. Deck creation. The full brief → draft → refinement → output pipeline.</p>
+                </div>
+                <div class="curriculum-item">
+                    <h4>Personal Knowledge Systems</h4>
+                    <p>RAG over your documents. Ask questions of everything you've ever written or collected.</p>
+                </div>
+                <div class="curriculum-item">
+                    <h4>Automation Systems</h4>
+                    <p>"When X happens, do Y, then Z"—without Zapier's limitations. Multi-step workflows that actually work.</p>
+                </div>
+                <div class="curriculum-item">
+                    <h4>Live Workshop Sessions</h4>
+                    <p>Collaborative problem-solving. Real-time debugging. Cross-pollination across domains.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="structure-section">
+        <div class="section-inner section-wide">
+            <h2>The Structure</h2>
+            <p>Two weeks distributed. Two days in person. The methodology becomes muscle memory through repetition, not explanation.</p>
+
+            <div class="structure-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <h4>Day 1: Micro-Project</h4>
+                    <p>Full guided loop from idea to published script. Builds confidence, establishes methodology.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <h4>Week 1-2: Small Project</h4>
+                    <p>Self-directed with support. Midway surgeries for those stuck. Real friction, real debugging.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <h4>Final Days: Presentations</h4>
+                    <p>Each participant presents their work. What worked, what didn't. Cross-pollination across domains.</p>
+                </div>
+            </div>
+
+            <p style="margin-top: 3rem;">Each project follows the same methodology loop: <strong>Brief → Brainstorm → Plan → Execute → Review → Refine → Test → Evaluate → Publish → Reflect.</strong></p>
+
+            <p>But ownership shifts with each repetition. Micro: you follow with guidance. Small: you lead with support. The loop becomes instinct.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-inner">
+            <h2>Is This For You?</h2>
+            <p>You've tried the tools. You've hit the wall. You sense something is shifting, but you're not sure how to ride the wave.</p>
+
+            <p>If your work is going well without AI, this may not be for you yet. But if you sense this shift underway—and want to lead it rather than follow—then this is for you. That instinct is worth trusting.</p>
+
+            <p>This isn't for those waiting for a playbook. If you'd rather follow corporate best practices than shape them, wait. Someone will write the manual eventually.</p>
+
+            <p>This is for practitioners who want to define how their work evolves—while the tools are still malleable and the ecosystem is still open.</p>
+
+            <p style="color: var(--amber-glow); font-weight: 600;">In twelve months, your organization will roll out AI guidelines. The question is whether you shaped those guidelines or they were handed to you by people who don't understand your work.</p>
+        </div>
+    </section>
+
+    <section class="cta-section" id="signup">
+        <h2>Join the Camp</h2>
+        <p class="subtitle">This community is forming now. These methods are being written now.</p>
+
+        <div class="urgency-text">
+            <span>The tools are ready.</span>
+            <span>The moment is now.</span>
+            <span>You are being invited.</span>
+        </div>
+
+        <form class="signup-form" action="https://formspree.io/f/your-form-id" method="POST">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="role">What's Your Role?</label>
+                <select id="role" name="role" required>
+                    <option value="">Select one...</option>
+                    <option value="strategist">Strategist / Consultant</option>
+                    <option value="researcher">Researcher / Analyst</option>
+                    <option value="pm">Project / Product Manager</option>
+                    <option value="operations">Operations / Admin</option>
+                    <option value="creative">Creative / Content</option>
+                    <option value="executive">Executive / Leadership</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="interest">What problem are you hoping to solve with AI?</label>
+                <textarea id="interest" name="interest" placeholder="Be specific—articulation practice starts now..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Make It So</button>
+            <p class="form-note">We'll be in touch with next steps and cohort details.</p>
+        </form>
+    </section>
+
+    <footer>
+        <p>Make It So Camp — A <a href="https://nraford7.github.io/road-runner-economy/">Road Runner Economy</a> Production</p>
+    </footer>
+</body>
+</html>
