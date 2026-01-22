@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Road Runner Economy</title>
+    <meta name="description" content="The Cliff Wile E. Coyote Hasn't Noticed Yet - An essay on the AI disruption of the SaaS industry">
+    <meta property="og:title" content="The Road Runner Economy">
+    <meta property="og:description" content="The Cliff Wile E. Coyote Hasn't Noticed Yet">
+    <meta property="og:type" content="article">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --canyon-deep: #8B4513;
+            --canyon-light: #D2691E;
+            --desert-sand: #F4A460;
+            --sky-blue: #87CEEB;
+            --acme-blue: #1E90FF;
+            --coyote-brown: #A0522D;
+            --tombstone-grey: #696969;
+            --road-black: #1a1a1a;
+            --dust-cloud: #DEB887;
+            --text-cream: #FFF8DC;
+            --danger-red: #DC143C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Lora', Georgia, serif;
+            background: linear-gradient(180deg,
+                var(--sky-blue) 0%,
+                #B0E0E6 20%,
+                var(--desert-sand) 40%,
+                var(--canyon-light) 60%,
+                var(--canyon-deep) 80%,
+                var(--road-black) 100%
+            );
+            background-attachment: fixed;
+            color: var(--road-black);
+            line-height: 1.8;
+            font-size: 18px;
+            overflow-x: hidden;
+        }
+
+        /* Road Runner that zooms across screen */
+        .road-runner {
+            position: fixed;
+            font-size: 3rem;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .road-runner.zoom {
+            animation: zoomAcross 0.8s ease-in-out forwards;
+        }
+
+        @keyframes zoomAcross {
+            0% {
+                left: -100px;
+                opacity: 1;
+                transform: scaleX(1);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                left: calc(100vw + 100px);
+                opacity: 0;
+                transform: scaleX(1);
+            }
+        }
+
+        /* Beep Beep popup */
+        .beep-beep {
+            position: fixed;
+            font-family: 'Bangers', cursive;
+            font-size: 4rem;
+            color: var(--acme-blue);
+            text-shadow: 3px 3px 0 var(--canyon-deep), -1px -1px 0 white;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0) rotate(-10deg);
+        }
+
+        .beep-beep.show {
+            animation: beepPop 0.6s ease-out forwards;
+        }
+
+        @keyframes beepPop {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-10deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.3) rotate(5deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        /* Falling Coyote */
+        .falling-coyote {
+            position: fixed;
+            font-size: 4rem;
+            z-index: 998;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .falling-coyote.fall {
+            animation: coyoteFall 3s ease-in forwards;
+        }
+
+        @keyframes coyoteFall {
+            0% {
+                top: -100px;
+                opacity: 1;
+                transform: rotate(0deg) scale(1);
+            }
+            20% {
+                transform: rotate(45deg) scale(0.9);
+            }
+            40% {
+                transform: rotate(-30deg) scale(0.8);
+            }
+            60% {
+                transform: rotate(60deg) scale(0.7);
+            }
+            80% {
+                transform: rotate(-45deg) scale(0.5);
+            }
+            100% {
+                top: 120vh;
+                opacity: 0;
+                transform: rotate(720deg) scale(0.3);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            background:
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="80">🏜️</text></svg>')
+                bottom left / 150px repeat-x,
+                linear-gradient(180deg, var(--sky-blue) 0%, #B0E0E6 60%, var(--desert-sand) 100%);
+            background-attachment: fixed;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 30%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 25%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(3rem, 12vw, 8rem);
+            color: var(--canyon-deep);
+            text-shadow:
+                4px 4px 0 var(--desert-sand),
+                8px 8px 0 rgba(0,0,0,0.2);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            animation: titleBounce 0.8s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes titleBounce {
+            0% { transform: translateY(-50px); opacity: 0; }
+            60% { transform: translateY(10px); }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .hero .subtitle {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: var(--tombstone-grey);
+            text-shadow: 2px 2px 0 white;
+            margin-bottom: 2rem;
+            animation: subtitleSlide 1s ease-out 0.3s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes subtitleSlide {
+            0% { transform: translateX(-30px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .hero .author {
+            font-style: italic;
+            color: var(--canyon-deep);
+            font-size: 1.1rem;
+            animation: fadeIn 1s ease-out 0.6s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            color: var(--acme-blue);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Content sections */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            background: rgba(255, 248, 220, 0.95);
+            margin: 4rem 0;
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow:
+                0 10px 40px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.5);
+            position: relative;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s ease-out;
+        }
+
+        .section.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 40px;
+            background: var(--canyon-deep);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            color: var(--canyon-deep);
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 0 var(--desert-sand);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        /* Tombstone image section */
+        .tombstone-section {
+            background: linear-gradient(180deg,
+                var(--tombstone-grey) 0%,
+                #4a4a4a 100%
+            );
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tombstone-section::before {
+            content: '💀 RIP 💀';
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .tombstone-img {
+            max-width: 100%;
+            width: 600px;
+            border-radius: 12px;
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 100px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .tombstone-img:hover {
+            transform: scale(1.02);
+        }
+
+        .tombstone-caption {
+            color: var(--text-cream);
+            font-style: italic;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Meme sections */
+        .meme-break {
+            text-align: center;
+            padding: 3rem 1rem;
+            font-size: 6rem;
+            position: relative;
+        }
+
+        .meme-break .caption {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            color: var(--text-cream);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-top: 1rem;
+        }
+
+        /* Pullquotes */
+        .pullquote {
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            color: var(--danger-red);
+            text-align: center;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            text-shadow: 2px 2px 0 var(--desert-sand);
+        }
+
+        .pullquote::before,
+        .pullquote::after {
+            content: '💥';
+            font-size: 2rem;
+            margin: 0 1rem;
+        }
+
+        /* Code-style quotes */
+        .tech-quote {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--road-black);
+            color: #00ff00;
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-quote::before {
+            content: '>';
+            color: var(--acme-blue);
+            margin-right: 0.5rem;
+        }
+
+        .tech-quote::after {
+            content: '█';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* ACME Product boxes */
+        .acme-box {
+            background: linear-gradient(135deg, var(--acme-blue) 0%, #4169E1 100%);
+            color: white;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .acme-box::before {
+            content: 'ACME CORP.';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--danger-red);
+            color: white;
+            font-family: 'Bangers', cursive;
+            padding: 0.3rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transform: rotate(3deg);
+        }
+
+        .acme-box h3 {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Second order effects list */
+        .effects-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .effects-list li {
+            padding: 1rem 0 1rem 3rem;
+            position: relative;
+            border-bottom: 1px dashed var(--canyon-light);
+        }
+
+        .effects-list li::before {
+            content: '💨';
+            position: absolute;
+            left: 0;
+            top: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .effects-list li:last-child {
+            border-bottom: none;
+        }
+
+        .effects-list strong {
+            color: var(--canyon-deep);
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+        }
+
+        /* Cliff edge visual */
+        .cliff-section {
+            background: linear-gradient(180deg,
+                var(--canyon-light) 0%,
+                var(--canyon-deep) 30%,
+                transparent 30%,
+                transparent 100%
+            );
+            min-height: 300px;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 2rem;
+        }
+
+        .cliff-section .cliff-text {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            color: var(--text-cream);
+            text-shadow: 3px 3px 0 var(--road-black);
+            text-align: center;
+        }
+
+        .cliff-section .falling-emoji {
+            position: absolute;
+            font-size: 4rem;
+            animation: gentleFall 4s ease-in infinite;
+        }
+
+        @keyframes gentleFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(300px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--road-black);
+            color: var(--text-cream);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .footer .beep-final {
+            font-family: 'Bangers', cursive;
+            font-size: 5rem;
+            color: var(--acme-blue);
+            text-shadow: 3px 3px 0 var(--canyon-deep);
+            margin-bottom: 2rem;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        .footer a {
+            color: var(--acme-blue);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Road at bottom */
+        .road {
+            height: 20px;
+            background:
+                repeating-linear-gradient(90deg,
+                    var(--road-black) 0px,
+                    var(--road-black) 40px,
+                    transparent 40px,
+                    transparent 50px
+                ),
+                linear-gradient(180deg, #333 0%, var(--road-black) 100%);
+            background-size: 50px 100%, 100% 100%;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section {
+                padding: 2rem 1.5rem;
+                margin: 3rem 1rem;
+            }
+
+            .pullquote {
+                font-size: 1.5rem;
+            }
+
+            .cliff-section .cliff-text {
+                font-size: 2rem;
+            }
+
+            .meme-break {
+                font-size: 4rem;
+            }
+        }
+
+        /* Dust particles */
+        .dust-particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--dust-cloud);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 997;
+        }
+
+        /* Easter egg cursor */
+        .content:hover {
+            cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 100 100"><text y="80" font-size="80">🏃</text></svg>') 16 16, auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated elements -->
+    <div class="road-runner" id="roadRunner">🐦</div>
+    <div class="beep-beep" id="beepBeep">BEEP BEEP!</div>
+    <div class="falling-coyote" id="fallingCoyote">🐺</div>
+
+    <!-- Hero -->
+    <header class="hero">
+        <h1>The Road Runner Economy</h1>
+        <p class="subtitle">Or: The Cliff Wile E. Coyote Hasn't Noticed Yet</p>
+        <p class="author">By Noah Raford</p>
+        <div class="scroll-hint" onclick="document.querySelector('.content').scrollIntoView({behavior: 'smooth'})">
+            ⬇️ Meep Meep ⬇️
+        </div>
+    </header>
+
+    <main class="content">
+        <!-- Opening -->
+        <section class="section">
+            <p>There's a moment in every Road Runner cartoon when Wile E. Coyote sprints off the edge of a cliff and keeps running. He's suspended in midair, legs churning, absolutely confident in his forward momentum—until he looks down. Then physics remembers him, and gravity does its work.</p>
+            <p><strong>The global software industry is currently sprinting off that cliff.</strong></p>
+        </section>
+
+        <div class="meme-break">
+            <span>🐺💨</span>
+            <p class="caption">*legs still spinning*</p>
+        </div>
+
+        <!-- Tombstone Section -->
+        <div class="tombstone-section">
+            <img src="tombstone.jpg" alt="RIP SaaS Companies Tombstone" class="tombstone-img">
+            <p class="tombstone-caption">"Why pay for SaaS ever again? Be a DIY degen who inferences claude for software."</p>
+        </div>
+
+        <!-- The Thesis -->
+        <section class="section">
+            <h2>The Phase Transition</h2>
+            <p>We are witnessing something genuinely unprecedented: the emergence of what I call the <strong>Road Runner Economy</strong>—a phase transition in which the vast majority of commercial software becomes instantly replicable by any competent team with access to frontier AI models. The metaphor is precise: these companies are still running, still raising rounds, still hitting quarterly targets. They just haven't looked down yet.</p>
+            <p>Three months ago, almost nobody believed this. Jesse Hercules at Obra—one of the sharper observers of this space—put it plainly: <em>"I feel like 3 months ago, when we were saying this, almost nobody believed it."</em> The skepticism was understandable. We've heard "this changes everything" so many times that the phrase has lost all meaning. But Jesse added something else that's stuck with me:</p>
+            <div class="tech-quote">"We're still in the slowly part of 'slowly and then all at once,' but the slope of the line is changing."</div>
+            <p>That slope changed over Christmas.</p>
+        </section>
+
+        <div class="meme-break">
+            <span>🎄➡️💻➡️🤯</span>
+            <p class="caption">The Holiday Awakening</p>
+        </div>
+
+        <!-- Christmas Break -->
+        <section class="section">
+            <h2>The Perfect Storm</h2>
+            <p>Something happened during the holiday break. A perfect storm of perfect storms.</p>
+            <p>Consider the conditions: A brief respite from the relentless news cycle. Actual time—that rarest resource—to experiment rather than just read about experiments. A collective "fuck it, let's see what you can do" attitude that emerges when people step away from their day jobs. And perhaps most potently, that particular flavor of New Year's resolution energy: <em>next year I want to make more things myself.</em></p>
+            <p>For me, it was having extra time to dig into experiments I hadn't had time for over the previous months, right at the moment others like me were doing exactly the same thing. It was having friends like Harper Reed and a growing network of curious builders, so the holiday catchups and random "what have you been up tos" all pointed the same direction. And then Claude Code itself—wow. And the community forming around it. No joking, it's all been a flywheel.</p>
+            <p>The result was thousands of people simultaneously discovering the same thing: they could build software. Not toy demos. Real, functional, production-quality software. In hours, not months.</p>
+            <p>And now it's spreading. <strong>After the holiday break is the first time I started hearing things outside these groups that I only heard a lot inside them.</strong> The language. The examples. The dawning recognition. What felt like insider knowledge two months ago is becoming common conversation. The memetic barrier has been breached.</p>
+        </section>
+
+        <!-- What SaaS Actually Sells -->
+        <section class="section">
+            <h2>What Are We Actually Paying For?</h2>
+            <p>Consider what these SaaS businesses actually sell. Salesforce sells a database with forms and workflows on top. Notion sells a document editor with a database underneath. Zapier sells if-then logic connecting APIs. Stripe sells a wrapper around bank rails with fraud detection. ServiceNow sells ticketing. Zendesk sells ticketing with a chat widget. Monday.com sells ticketing with pretty colors.</p>
+            <p>I don't mean to be dismissive—these companies employ brilliant engineers and have solved genuinely hard problems over decades. But the <em>essential functionality</em> of most enterprise software can now be described in a few paragraphs and implemented in a few hours by an AI coding agent.</p>
+        </section>
+
+        <div class="pullquote">
+            "This meeting could have been a prompt."
+        </div>
+
+        <section class="section">
+            <p>The new workplace idiom writes itself. Or more brutally:</p>
+            <div class="pullquote">
+                "I just one-shot your company."
+            </div>
+            <p>Both phrases are already circulating. Both capture something true. The first recognizes that vast swathes of corporate process—the meetings, the requirements gathering, the sprint planning, the integration discussions—collapse into a single well-crafted prompt. The second acknowledges that years of accumulated engineering effort can now be replicated in a single session. One shot. Done.</p>
+        </section>
+
+        <div class="meme-break">
+            <span>🎯💥🏢</span>
+            <p class="caption">*one-shot intensifies*</p>
+        </div>
+
+        <!-- Economics -->
+        <section class="section">
+            <h2>The Math Is Brutal</h2>
+            <p>The economics are almost comically one-sided.</p>
+            <div class="acme-box">
+                <h3>ACME Price Comparison Calculator™</h3>
+                <p><strong>Salesforce Enterprise:</strong> $150-300 per user/month</p>
+                <p><strong>AI-Generated Custom CRM:</strong> $50-100 total/month</p>
+                <p><em>Not per user. Total.</em></p>
+            </div>
+            <p>Multiply that arbitrage across every software category and you begin to understand the scale of value about to be unlocked, or destroyed, depending on where you sit.</p>
+            <p>But the price differential, dramatic as it is, understates the real transformation. What's changing isn't just cost—it's the <em>nature</em> of what software can be.</p>
+            <p>Enterprise software has always been a compromise. You buy Salesforce not because it perfectly fits your business, but because building something custom was prohibitively expensive. You adapt your processes to the tool. The median enterprise runs 130+ SaaS applications, each solving a slice of their needs, none solving them well.</p>
+            <p>Now imagine the inverse: software that adapts perfectly to <em>your</em> business. Not configured—<strong>generated</strong>. The platonic ideal of software, instantiated.</p>
+        </section>
+
+        <!-- Cliff visualization -->
+        <div class="cliff-section">
+            <div class="cliff-text">🐺 HASN'T LOOKED DOWN YET 🐺</div>
+            <div class="falling-emoji" style="left: 20%; animation-delay: 0s;">📉</div>
+            <div class="falling-emoji" style="left: 50%; animation-delay: 1s;">💸</div>
+            <div class="falling-emoji" style="left: 80%; animation-delay: 2s;">📊</div>
+        </div>
+
+        <!-- Second Order Effects -->
+        <section class="section">
+            <h2>Second-Order Effects</h2>
+            <p>The first-order effect is obvious: SaaS margins compress toward zero. The moat was never the code—it was the pain of replacing it. That pain just evaporated.</p>
+            <p>But the second-order effects are stranger:</p>
+            <ul class="effects-list">
+                <li><strong>The Services Economy:</strong> The IT consulting industry—Accenture, Deloitte, Infosys—makes its living from the complexity of enterprise software. When that complexity collapses, so does the need for 500-person implementation teams.</li>
+                <li><strong>Venture Capital:</strong> The SaaS investment thesis depends on defensibility. If any competitor's product can be replicated in a weekend, what exactly is the moat?</li>
+                <li><strong>Employment:</strong> Not just at SaaS companies, but in corporate IT departments. The middleware humans—careers moving data between systems—find their job description suddenly automatable.</li>
+            </ul>
+        </section>
+
+        <div class="meme-break">
+            <span>🛫✈️🍸</span>
+            <p class="caption">*airport bar honesty mode activated*</p>
+        </div>
+
+        <!-- The Honest Take -->
+        <section class="section">
+            <h2>The Airport Bar Test</h2>
+            <p>Now comes the part where I'm supposed to offer reassurance. "But humans will still be needed for strategy!" "Creative work can't be automated!" "There will be new jobs we can't yet imagine!"</p>
+            <p>Maybe. But I've been in enough airport bars with enough honest technologists to know what they say when the tape recorder is off. The same people who publicly proclaim that AI is "just a tool" privately wonder if they're witnessing the beginning of a phase transition in human economic organization itself.</p>
+            <p>The honest answer is: we don't know. The landscape of the 21st-century economy is already largely defined, and it doesn't look like anything we've seen before. We are not simply optimizing the 20th century; we are entering genuinely novel territory, and our maps are blank.</p>
+        </section>
+
+        <!-- The Flywheel -->
+        <section class="section">
+            <h2>The Flywheel</h2>
+            <p>What strikes me most about this moment is how it emerged. Not from a single breakthrough announcement or a dramatic product launch, but from a collective realization that spread through networks of curious people over a holiday break. The flywheel effect was real: each person's experiments emboldened others, each shared discovery accelerated the next. A community of practice coalesced in weeks that might have taken years in a previous era.</p>
+            <p>This is how phase transitions actually happen. Not with a bang, but with a cascade of individual "holy shit" moments that reach critical mass. We're still in the slowly part of slowly and then all at once. But the slope of the line is changing. You can feel it in the conversations that have shifted, in the questions people are now asking, in the memes that no longer need explanation.</p>
+        </section>
+
+        <div class="meme-break">
+            <span>🐦💨💨💨</span>
+            <p class="caption">*meep meep*</p>
+        </div>
+
+        <!-- Conclusion -->
+        <section class="section">
+            <h2>The Next Twelve Months</h2>
+            <p>The next twelve months will see a cascade of custom software replace commercial software at a pace that will surprise even those of us who have been anticipating it. The Road Runner economy isn't coming. It's here. The cliff edge has already been crossed.</p>
+            <p>The SaaS tombstone meme is funny because it's true, and terrifying for the same reason. These companies haven't looked down yet. When they do—when the quarterly reports stop making sense, when the churn metrics spike, when the enterprise customers quietly cancel their contracts and replace them with AI-generated alternatives—the fall will be swift.</p>
+            <p>What emerges on the other side? A world of bespoke software, infinitely customizable, radically cheaper, fundamentally different. A world where "off-the-shelf" is an insult and "made for you" is the baseline expectation. A world where a meeting really could have been a prompt, and where one-shotting a company is no longer a punchline but a business plan.</p>
+            <p>Whether that world is better depends entirely on who's building it, and for whom.</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="beep-final">BEEP BEEP! 🐦</div>
+        <div class="road"></div>
+        <p style="margin-top: 2rem;">Noah Raford · January 2026</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem;">
+            <a href="https://github.com/noahraford/road-runner-economy">View on GitHub</a>
+        </p>
+    </footer>
+
+    <script>
+        // Intersection Observer for section animations
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => observer.observe(section));
+
+        // Road Runner zoom across screen
+        function triggerRoadRunner() {
+            const roadRunner = document.getElementById('roadRunner');
+            const beepBeep = document.getElementById('beepBeep');
+
+            // Random vertical position
+            const yPos = Math.random() * (window.innerHeight - 200) + 100;
+            roadRunner.style.top = yPos + 'px';
+
+            // Show beep beep at random position
+            beepBeep.style.top = (yPos - 60) + 'px';
+            beepBeep.style.left = (Math.random() * (window.innerWidth - 300) + 150) + 'px';
+
+            roadRunner.classList.remove('zoom');
+            beepBeep.classList.remove('show');
+
+            void roadRunner.offsetWidth; // Trigger reflow
+
+            roadRunner.classList.add('zoom');
+
+            setTimeout(() => {
+                beepBeep.classList.add('show');
+            }, 300);
+        }
+
+        // Falling Coyote
+        function triggerFallingCoyote() {
+            const coyote = document.getElementById('fallingCoyote');
+            const xPos = Math.random() * (window.innerWidth - 100) + 50;
+            coyote.style.left = xPos + 'px';
+            coyote.classList.remove('fall');
+            void coyote.offsetWidth;
+            coyote.classList.add('fall');
+        }
+
+        // Trigger animations on scroll milestones
+        let lastScrollY = 0;
+        let roadRunnerTriggered = false;
+        let coyoteTriggered = false;
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollY / maxScroll;
+
+            // Trigger road runner at 25% scroll
+            if (scrollPercent > 0.25 && scrollPercent < 0.3 && !roadRunnerTriggered) {
+                triggerRoadRunner();
+                roadRunnerTriggered = true;
+                setTimeout(() => roadRunnerTriggered = false, 10000);
+            }
+
+            // Trigger falling coyote at 60% scroll
+            if (scrollPercent > 0.6 && scrollPercent < 0.65 && !coyoteTriggered) {
+                triggerFallingCoyote();
+                coyoteTriggered = true;
+                setTimeout(() => coyoteTriggered = false, 10000);
+            }
+
+            lastScrollY = scrollY;
+        });
+
+        // Initial road runner after 3 seconds
+        setTimeout(triggerRoadRunner, 3000);
+
+        // Random road runner every 30-60 seconds
+        setInterval(() => {
+            if (Math.random() > 0.5) {
+                triggerRoadRunner();
+            }
+        }, 45000);
+
+        // Easter egg: click the hero for beep beep
+        document.querySelector('.hero').addEventListener('click', (e) => {
+            triggerRoadRunner();
+        });
+
+        // Console easter egg
+        console.log('%c🐦 BEEP BEEP!', 'font-size: 48px; color: #1E90FF; text-shadow: 2px 2px 0 #8B4513;');
+        console.log('%cThe Road Runner Economy', 'font-size: 24px; color: #8B4513;');
+        console.log('This meeting could have been a prompt.');
+    </script>
+</body>
+</html>
